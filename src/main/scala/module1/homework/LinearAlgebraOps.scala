@@ -10,5 +10,5 @@ object LinearAlgebraOps{
 
   def axpy(a: Int, v1: Array[Int], v2: Array[Int]): Array[Int] =
     if (v1.length != v2.length) throw new Exception("Operation is not supported")
-    else v1.zip(v2).map(d => a * d._1 + d._2)
+    else sum(scale(v1, a), v2)
 }
