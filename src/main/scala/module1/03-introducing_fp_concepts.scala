@@ -266,7 +266,6 @@ object hof{
       * Например вот этот метод принимает некую последовательность аргументов с типом Int и выводит их на печать
       * def printArgs(args: Int*) = args.foreach(println(_))
       */
-     //def this(args: T*) = List.apply(args) //if (args.isEmpty) Nil else ::(args.head, new List[T](args.tail:_*))
 
      /**
       *
