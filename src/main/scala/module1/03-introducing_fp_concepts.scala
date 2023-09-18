@@ -181,12 +181,21 @@ object hof{
       case Some(v) => f(v)
       case None => None
     }
+
+    def printIfAny() = if (!this.isEmpty) println(this.get)
+
+    def zip[B](b: Option[B]): Option[(T, B)] =
+      if (this.isEmpty || b.isEmpty) None else new Some[(T, B)]((this.get, b.get))
+
+    def filter(predicate: T => Boolean): Option[T] = if (this.isEmpty || !predicate(this.get)) None else this
   }
   case class Some[T](v: T) extends Option[T]
   case object None extends Option[Nothing]
 
   object Option{
+    def fromValue[T](value: T): Option[T] = new Some(value)
 
+    def empty[T]() : Option[T] = None
   }
 
 
@@ -228,15 +237,27 @@ object hof{
     */
 
     sealed trait List[+T] {
+
      /**
       * Метод cons, добавляет элемент в голову списка, для этого метода можно воспользоваться названием `::`
       *
       */
+     def cons[B >: T](h: B): List[B] = ::(h, this)
 
      /**
       * Метод mkString возвращает строковое представление списка, с учетом переданного разделителя
       *
       */
+     def mkString(delimiter: String): String = {
+       def loop(accum: String, tail: List[T]): String = {
+         tail match {
+           case ::(h, t) => if (accum.length > 0) loop(s"$accum$delimiter$h", t) else loop(s"$h", t)
+           case Nil => accum
+         }
+       }
+
+       loop("", this)
+     }
 
      /**
       * Конструктор, позволяющий создать список из N - го числа аргументов
@@ -250,17 +271,49 @@ object hof{
       *
       * Реализовать метод reverse который позволит заменить порядок элементов в списке на противоположный
       */
+     def reverse(): List[T] = {
+       def loop(accum: List[T], tail: List[T]): List[T] = {
+         tail match {
+           case ::(h, t) => loop(::(h, accum), t)
+           case Nil => accum
+         }
+       }
+
+       loop(Nil, this)
+     }
 
      /**
       *
       * Реализовать метод map для списка который будет применять некую ф-цию к элементам данного списка
       */
+     def map[B](f: T => B): List[B] = {
+      def loop(accum: List[B], tail: List[T]): List[B] = {
+        tail match {
+          case ::(h, t) => loop(::(f(h), accum), t)
+          case Nil => accum
+        }
+      }
+
+       loop(Nil, this).reverse()
+     }
 
 
      /**
       *
       * Реализовать метод filter для списка который будет фильтровать список по некому условию
       */
+     def filter(f: T => Boolean): List[T] = {
+       def loop(accum: List[T], tail: List[T]): List[T] = {
+         tail match {
+           case ::(h, t) =>
+             if (f(h)) loop(::(h, accum), t)
+             else loop(accum, t)
+           case Nil => accum
+         }
+       }
+
+       loop(Nil, this).reverse()
+     }
    }
     case class ::[A](head: A, tail: List[A]) extends List[A]
     case object Nil extends List[Nothing]
