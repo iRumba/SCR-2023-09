@@ -1,3 +1,4 @@
+import module1.homework.homework3.Basket
 import module1.threads.{Thread1, ToyFuture, getRatesLocation1, getRatesLocation2, getRatesLocation3, getRatesLocation4, printRunningTime}
 import module1.{executor, future, hof, lazyOps, list, try_, type_system}
 
@@ -9,6 +10,16 @@ object Main {
   def main(args: Array[String]): Unit = {
     println("Hello, World!" +
       s" thread - ${Thread.currentThread().getName}" )
+
+    val baskets = List.fill(10000)(new Basket())
+
+    def getResult(f: Basket => Boolean): Double = {
+      baskets.count(f).toDouble / 10000
+    }
+
+    val results = List(getResult(b => b.Select()), getResult(b => b.Select2()))
+
+    results.foreach(x => println(x))
 
 //    val t1 = new Thread{
 //      override def run(): Unit ={
@@ -64,11 +75,11 @@ object Main {
 
 
 
-    future.printRunningTime(
-      future.f7
-    )
-
-    Thread.sleep(4000)
+//    future.printRunningTime(
+//      future.f7
+//    )
+//
+//    Thread.sleep(4000)
 
   }
 }
