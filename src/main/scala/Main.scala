@@ -4,12 +4,15 @@ import module1.implicits.{implicit_conversions, implicit_scopes}
 import module1.threads.{Thread1, ToyFuture, getRatesLocation1, getRatesLocation2, getRatesLocation3, getRatesLocation4, printRunningTime}
 import module1.validation.UserDTO
 import module1.{executor, future, hof, lazyOps, list, try_, type_system, validation}
-import module2.{toyCatsEffect, toyModel, typeClasses, zioConstructors}
+import module2.{toyModel, zioConstructors}
 import module2.functional_effects.functionalProgram.{declarativeEncoding, executableEncoding}
 import zio.ZIO
 
 import scala.concurrent.Future
 import scala.io.StdIn
+import module1.homework.futures.task_futures_sequence
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 object Main {
@@ -17,6 +20,10 @@ object Main {
   def main(args: Array[String]): Unit = {
     println("Hello, World!" +
       s" thread - ${Thread.currentThread().getName}" )
+
+    val futures = List(Future.successful(1))
+
+    task_futures_sequence.fullSequence(futures)
 
 //    val t1 = new Thread{
 //      override def run(): Unit ={
