@@ -1,8 +1,10 @@
 package module1.homework.futures
 
 import module1.homework.futures.HomeworksUtils.TaskSyntax
+import zio.CancelableFuture
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext, Future, Promise}
+import scala.util.{Failure, Success, Try}
 
 object task_futures_sequence {
 
@@ -20,6 +22,13 @@ object task_futures_sequence {
    * @return асинхронную задачу с кортежом из двух списков
    */
   def fullSequence[A](futures: List[Future[A]])
-                     (implicit ex: ExecutionContext): Future[(List[A], List[Throwable])] =
-    task"Реализуйте метод `fullSequence`" ()
+                     (implicit ex: ExecutionContext): Future[(List[A], List[Throwable])] = {
+
+    futures.foldRight(Future.successful((List[A](), List[Throwable]()))) {
+      (item, acc) =>
+        acc.flatMap(a => item.map(i => (i :: a._1, a._2)).recover{
+          case ex => (a._1, ex :: a._2)
+        })
+    }
+  }
 }
