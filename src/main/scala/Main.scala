@@ -7,6 +7,7 @@ import module1.validation.UserDTO
 import module1.{executor, future, hof, lazyOps, list, try_, type_system, validation}
 import module2.{toyCatsEffect, toyModel, typeClasses, zioConcurrency, zioConstructors}
 import module2.functional_effects.functionalProgram.{declarativeEncoding, executableEncoding}
+import module2.homework.catsEffectHomework.guessProgram
 import zio.ZIO
 
 import scala.concurrent.Future
@@ -19,6 +20,8 @@ object Main {
   def main(args: Array[String]): Unit = {
     println("Hello, World!" +
       s" thread - ${Thread.currentThread().getName}" )
+
+
 
 //    val t1 = new Thread{
 //      override def run(): Unit ={
@@ -92,7 +95,7 @@ object Main {
 
 
 
-    zio.Runtime.default.unsafeRun(zioConcurrency.g1)
+    //zio.Runtime.default.unsafeRun(zioConcurrency.g1)
 
   }
 }
